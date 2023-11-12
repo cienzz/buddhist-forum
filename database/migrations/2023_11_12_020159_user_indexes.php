@@ -12,8 +12,20 @@ return new class extends Migration
     {
         Schema::table('users', function ($collection) {
             $collection->unique('username');
-            $collection->unique('email');
-            $collection->unique('phone_number');
+            $collection->index('email', null, null,
+                [
+                    'unique' => true,
+                    'sparse' => true,
+                    'background' => true
+                ]
+            );
+            $collection->index('phone_number', null, null,
+                [
+                    'unique' => true,
+                    'sparse' => true,
+                    'background' => true
+                ]
+            );
 
             $collection->index(['username', 'status', 'role']);
         });
