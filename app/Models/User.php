@@ -3,24 +3,58 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+
+use App\Enums\UserRole;
+use App\Enums\UserStatus;
+use App\HasApiTokens;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Foundation\Auth\User as Authenticatable;
+use MongoDB\Laravel\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
-use Laravel\Sanctum\HasApiTokens;
 
 class User extends Authenticatable
 {
     use HasApiTokens, HasFactory, Notifiable;
 
     /**
+     * The model's attributes.
+     *
+     * @var array
+     */
+    protected $attributes = [
+        'status' => UserStatus::ACTIVE,
+        'role' => UserRole::USER
+    ];
+
+    /**
+     * The attributes that should be cast.
+     *
+     * @var array<string, string>
+     */
+    protected $casts = [
+        'birth_at' => 'datetime',
+        'email_verified_at' => 'datetime',
+        'phone_number_verified_at' => 'datetime',
+        'login_at' => 'datetime',
+        'password' => 'hashed',
+        'status' => UserStatus::class,
+        'role' => UserRole::class,
+    ];
+    
+    /**
      * The attributes that are mass assignable.
      *
      * @var array<int, string>
      */
     protected $fillable = [
-        'name',
-        'email',
+        'username',
         'password',
+        'status',
+        'role',
+        'email',
+        'phone_number',
+        'gender',
+        'birth_at',
+        'address'
     ];
 
     /**
@@ -33,13 +67,22 @@ class User extends Authenticatable
         'remember_token',
     ];
 
-    /**
-     * The attributes that should be cast.
-     *
-     * @var array<string, string>
-     */
-    protected $casts = [
-        'email_verified_at' => 'datetime',
-        'password' => 'hashed',
-    ];
+    // username
+    // password
+    // status
+    // role
+    // email
+    // email_verified_at
+    // phone_number
+    // phone_number_verified_at
+    // gender
+    // zodiac
+    // shio
+    // birth_at
+    // address [
+    //     city
+    //     province
+    //     country
+    // ]
+    // login_at
 }
