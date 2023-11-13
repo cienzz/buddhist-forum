@@ -19,7 +19,6 @@ class AuthController extends Controller
 {
     public function register(AuthRegisterRequest $request)
     {
-        return UserElement::getElementByDate('1993-03-13');
         return new UserResource(User::create($request->validated()));
     }
 
