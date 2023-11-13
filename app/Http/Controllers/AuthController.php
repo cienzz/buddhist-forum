@@ -2,16 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\Enums\UserElement;
-use App\Enums\UserShio;
 use App\Enums\UserStatus;
-use App\Enums\UserZodiac;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\AuthRegisterRequest;
 use App\Http\Requests\AuthTokenRequest;
 use App\Http\Resources\UserResource;
 use App\Models\User;
-use Carbon\Carbon;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Support\Facades\Auth;
 
@@ -19,7 +15,10 @@ class AuthController extends Controller
 {
     public function register(AuthRegisterRequest $request)
     {
-        return new UserResource(User::create($request->validated()));
+        $user = new User($request->validated());
+        $user->push('ips', $request->ips(), true);
+        $user->save();
+        return new UserResource($user);
     }
 
     public function token(AuthTokenRequest $request)
@@ -31,6 +30,7 @@ class AuthController extends Controller
                 throw new AuthorizationException(trans('auth.blacklist'));
             }
 
+            $user->push('ips', $request->ips(), true);
             $user->touch('login_at');
             $user->tokens()->where('name', $request->username)->forceDelete();
 

@@ -90,4 +90,5 @@ class User extends Authenticatable
     //     country
     // ]
     // login_at
+    // ips
 }

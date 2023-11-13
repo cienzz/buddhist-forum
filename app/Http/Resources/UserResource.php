@@ -15,11 +15,19 @@ class UserResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-        $data = parent::toArray($request);
-
-        // $data['phone_number'] = Str::mask($this->phone_number, '*', 2, -2);
-        // $data['email'] = Str::mask($this->email, '*', 2, -2);
-
-        return $data;
+        return [
+            'username' => $this->username,
+            'status' => $this->status,
+            'email' => Str::mask($this->email, '*', 2, -2),
+            'email_verified_at' => $this->email_verified_at,
+            'phone_number' => Str::mask($this->phone_number, '*', 2, -2),
+            'phone_number_verified_at' => $this->phone_number_verified_at,
+            'gender' => $this->gender,
+            'zodiac' => $this->zodiac,
+            'shio' => $this->shio,
+            'element' => $this->element,
+            'birth_at' => $this->birth_at,
+            'address' => $this->address
+        ];
     }
 }
