@@ -2,12 +2,16 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\UserElement;
+use App\Enums\UserShio;
 use App\Enums\UserStatus;
+use App\Enums\UserZodiac;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\AuthRegisterRequest;
 use App\Http\Requests\AuthTokenRequest;
 use App\Http\Resources\UserResource;
 use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Support\Facades\Auth;
 
@@ -15,6 +19,7 @@ class AuthController extends Controller
 {
     public function register(AuthRegisterRequest $request)
     {
+        return UserElement::getElementByDate('1993-03-13');
         return new UserResource(User::create($request->validated()));
     }
 
@@ -46,5 +51,4 @@ class AuthController extends Controller
             ]
         ];
     }
-
 }

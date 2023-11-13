@@ -4,7 +4,10 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 
+use App\Enums\UserElement;
+use App\Enums\UserGender;
 use App\Enums\UserRole;
+use App\Enums\UserShio;
 use App\Enums\UserStatus;
 use App\HasApiTokens;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -38,6 +41,9 @@ class User extends Authenticatable
         'password' => 'hashed',
         'status' => UserStatus::class,
         'role' => UserRole::class,
+        'gender' => UserGender::class,
+        'shio' => UserShio::class,
+        'element' => UserElement::class
     ];
     
     /**
@@ -78,6 +84,7 @@ class User extends Authenticatable
     // gender
     // zodiac
     // shio
+    // element
     // birth_at
     // address [
     //     city

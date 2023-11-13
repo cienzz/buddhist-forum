@@ -2,7 +2,10 @@
 
 namespace App\Http\Requests;
 
+use App\Enums\UserGender;
+use App\Enums\UserStatus;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class UserUpdateRequest extends FormRequest
 {
@@ -14,7 +17,12 @@ class UserUpdateRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'password' => 'required|min:6|max:15|confirmed',
+            'gender'            => Rule::in(UserGender::cases()),
+            'birth_at'          => 'date',
+            'address'           => 'array',
+            'address.city'      => 'string',
+            'address.province'  => 'string',
+            'address.country'   => 'string',
         ];
     }
 }
