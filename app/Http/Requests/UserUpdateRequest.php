@@ -17,6 +17,8 @@ class UserUpdateRequest extends FormRequest
     public function rules(): array
     {
         return [
+            'phone_number'      => 'numeric',
+            'email'             => 'email',
             'gender'            => Rule::in(UserGender::cases()),
             'birth_at'          => 'date',
             'address'           => 'array',
