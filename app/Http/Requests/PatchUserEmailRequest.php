@@ -6,7 +6,7 @@ use App\Models\User;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
-class UserPatchPhoneNumberRequest extends FormRequest
+class PatchUserEmailRequest extends FormRequest
 {
     /**
      * Get the validation rules that apply to the request.
@@ -16,7 +16,7 @@ class UserPatchPhoneNumberRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'phone_number' => ['required', 'numeric', Rule::unique(User::class)]
+            'email' => ['required', 'email', Rule::unique(User::class)]
         ];
     }
 }

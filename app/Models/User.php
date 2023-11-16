@@ -13,6 +13,7 @@ use App\HasApiTokens;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use MongoDB\Laravel\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use MongoDB\Laravel\Eloquent\Casts\ObjectId;
 
 class User extends Authenticatable
 {
@@ -43,7 +44,8 @@ class User extends Authenticatable
         'role' => UserRole::class,
         'gender' => UserGender::class,
         'shio' => UserShio::class,
-        'element' => UserElement::class
+        'element' => UserElement::class,
+        'temples.*._id' => ObjectId::class
     ];
     
     /**
@@ -67,8 +69,7 @@ class User extends Authenticatable
      * @var array<int, string>
      */
     protected $hidden = [
-        'password',
-        'remember_token',
+        'password'
     ];
 
     // username
@@ -91,4 +92,20 @@ class User extends Authenticatable
     // ]
     // login_at
     // ips
+    // count_temples
+    // temples [
+    //     {
+    //         _id
+    //         name
+    //     }
+    // ]
+    // count_events
+    // events [
+    //     {
+    //         _id
+    //         name
+    //         start_at
+    //         end_at
+    //     }
+    // ]
 }

@@ -96,10 +96,7 @@ return [
         'mongodb' => [
             'driver' => 'mongodb',
             'dsn' => env('DB_DSN'),
-            'database' => env('DB_DATABASE', 'forge'),
-            // 'options' => [
-            //     'database' => env('DB_AUTHENTICATION_DATABASE', 'admin')
-            // ]
+            'database' => env('DB_DATABASE', 'forge')
         ],
     ],
 

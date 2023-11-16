@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\UserPatchEmailRequest;
-use App\Http\Requests\UserPatchPasswordRequest;
-use App\Http\Requests\UserPatchPhoneNumberRequest;
-use App\Http\Requests\UserUpdateRequest;
+use App\Http\Requests\PatchUserEmailRequest;
+use App\Http\Requests\PatchUserPasswordRequest;
+use App\Http\Requests\PatchUserPhoneNumberRequest;
+use App\Http\Requests\UpdateUserRequest;
 use App\Http\Resources\UserResource;
 use Illuminate\Support\Facades\Auth;
 
@@ -16,12 +16,12 @@ class UserController extends Controller
         return new UserResource(auth()->user());
     }
 
-    public function update(UserUpdateRequest $request)
+    public function update(UpdateUserRequest $request)
     {
         return new UserResource(tap(Auth::user())->update($request->validated()));
     }
 
-    public function patchPassword(UserPatchPasswordRequest $request)
+    public function patchPassword(PatchUserPasswordRequest $request)
     {
         $user = Auth::user();
         $user->password = $request->password;
@@ -30,7 +30,7 @@ class UserController extends Controller
         return ['data' => ['success' => true]];
     }
 
-    public function patchEmail(UserPatchEmailRequest $request)
+    public function patchEmail(PatchUserEmailRequest $request)
     {
         $user = Auth::user();
         $user->email = $request->email;
@@ -40,7 +40,7 @@ class UserController extends Controller
         return ['data' => ['success' => true]];
     }
 
-    public function patchPhoneNumber(UserPatchPhoneNumberRequest $request)
+    public function patchPhoneNumber(PatchUserPhoneNumberRequest $request)
     {
         $user = Auth::user();
         $user->phone_number = $request->phone_number;
