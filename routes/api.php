@@ -44,7 +44,7 @@ Route::middleware('auth:sanctum')->group(function() {
 Route::middleware('guest')->group(function() {
     Route::prefix('users')->group(function() {
         Route::post('register', [AuthController::class, 'register']);
-        Route::post('token', [AuthController::class, 'token']);//->middleware('throttle:5,5');
+        Route::post('token', [AuthController::class, 'token'])->middleware('throttle:5,5');
     });
 });
 
