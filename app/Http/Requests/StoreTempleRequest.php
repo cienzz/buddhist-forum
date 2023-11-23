@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use App\Enums\BankCode;
+use App\Enums\RoleAbility;
 use App\Enums\TempleStatus;
 use Carbon\Carbon;
 use Illuminate\Foundation\Http\FormRequest;
@@ -10,6 +11,14 @@ use Illuminate\Validation\Rule;
 
 class StoreTempleRequest extends FormRequest
 {
+    /**
+     * Determine if the user is authorized to make this request.
+     */
+    public function authorize(): bool
+    {
+        return $this->user()->currentAccessToken()->canAny(RoleAbility::TEMPLE_CREATE->value, RoleAbility::TEMPLE_CREATE->value.':'.$this->temple->_id);
+    }
+    
     /**
      * Get the validation rules that apply to the request.
      *

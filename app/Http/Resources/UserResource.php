@@ -16,7 +16,9 @@ class UserResource extends JsonResource
     public function toArray(Request $request): array
     {
         return [
+            '_id' => $this->_id,
             'username' => $this->username,
+            'roles' => $this->roles,
             'status' => $this->status,
             'email' => Str::mask($this->email, '*', 2, -2),
             'email_verified_at' => $this->email_verified_at,
@@ -27,7 +29,9 @@ class UserResource extends JsonResource
             'shio' => $this->shio,
             'element' => $this->element,
             'birth_at' => $this->birth_at,
-            'address' => $this->address
+            'address' => $this->address,
+            'created_at' => $this->created_at,
+            'updated_at' => $this->updated_at,
         ];
     }
 }

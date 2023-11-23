@@ -2,10 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\RoleAbility;
+use App\Http\Requests\PatchTempleMemberRolesRequest;
 use App\Http\Requests\StoreTempleRequest;
 use App\Http\Requests\UpdateTempleRequest;
 use App\Http\Resources\TempleResource;
 use App\Models\Temple;
+use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use MongoDB\BSON\UTCDateTime;
@@ -34,6 +37,10 @@ class TempleController extends Controller
 
     public function destroy(Temple $temple)
     {
+        if (! Auth::user()->currentAccessToken()->canAny(RoleAbility::TEMPLE_DELETE->value, RoleAbility::TEMPLE_DELETE->value.':'.$temple->_id)) {
+            throw new AuthorizationException();
+        }
+
         return ['data' => ['success' => $temple->delete()]];
     }
 
@@ -44,7 +51,7 @@ class TempleController extends Controller
     {
         $user = Auth::user();
 
-        if (collect($temple->members)->where('username', Auth::user()->username)->count()) {
+        if (collect($temple->members)->where('username', $user->username)->first()) {
             return $this->error(trans('errors.temples.members.exists'));
         }
         
@@ -59,8 +66,6 @@ class TempleController extends Controller
         $temple->increment('count_members');
         $temple->push('members', [
             'username' => $user->username,
-            'role' => 'member',
-            'role_position' => 0,
             'joined_at' => new UTCDateTIme()
         ]);
 
@@ -74,7 +79,7 @@ class TempleController extends Controller
     {
         $user = Auth::user();
 
-        if (! collect($temple->members)->where('username', Auth::user()->username)->count()) {
+        if (! collect($temple->members)->where('username', $user->username)->count()) {
             return $this->error(trans('errors.temples.members.not_exists'));
         }
         
@@ -87,5 +92,16 @@ class TempleController extends Controller
         $temple->pull('members', ['username' => $user->username]);
 
         return ['data' => ['success' => true]];
+    }
+
+    public function patchMemberRoles(PatchTempleMemberRolesRequest $request, Temple $temple, $member)
+    {
+        if (! collect($temple->members)->where('username', $member)->count()) {
+            return $this->error(trans('errors.temples.members.not_exists'));
+        }
+
+        $temple->where('members.username', 'mokilo')->update(['members.$.roles' => $request->roles]);
+
+        return ['data' => $temple->refresh()];
     }
 }

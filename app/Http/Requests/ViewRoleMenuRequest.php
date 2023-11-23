@@ -3,20 +3,20 @@
 namespace App\Http\Requests;
 
 use App\Enums\RoleAbility;
-use App\Enums\UserGender;
+use App\Models\Temple;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
-class UpdateUserRequest extends FormRequest
+class ViewRoleMenuRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
      */
     public function authorize(): bool
     {
-        return auth()->user() || $this->user()->currentAccessToken()->canAny(RoleAbility::USER_UPDATE->value);
+        return $this->user()->currentAccessToken()->canAny(RoleAbility::ROLE_VIEW->value, RoleAbility::ROLE_VIEW->value.':'.$this->temple_id);
     }
-    
+
     /**
      * Get the validation rules that apply to the request.
      *
@@ -25,12 +25,10 @@ class UpdateUserRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'gender'            => Rule::in(UserGender::cases()),
-            'birth_at'          => 'date',
-            'address'           => 'array',
-            'address.city'      => 'string',
-            'address.province'  => 'string',
-            'address.country'   => 'string',
+            'temple_id' => [
+                ! $this->user()->currentAccessToken()->can(RoleAbility::ROLE_VIEW->value) ? 'required' : 'nullable', 
+                Rule::exists(Temple::class, '_id')
+            ]
         ];
     }
 }

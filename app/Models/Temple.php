@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Casts\TempleMember;
 use App\Enums\TempleStatus;
 use Carbon\Carbon;
 
@@ -32,7 +33,8 @@ class Temple extends BaseModel
      * @var array
      */
     protected $casts = [
-        'status' => TempleStatus::class
+        'status' => TempleStatus::class,
+        'members' => TempleMember::class
     ];
 
     /**

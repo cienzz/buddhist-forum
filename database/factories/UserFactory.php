@@ -2,9 +2,13 @@
 
 namespace Database\Factories;
 
+use App\Enums\UserElement;
+use App\Enums\UserGender;
+use App\Enums\UserRole;
+use App\Enums\UserShio;
+use App\Enums\UserStatus;
+use App\Enums\UserZodiac;
 use Illuminate\Database\Eloquent\Factories\Factory;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Str;
 
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\User>
@@ -22,10 +26,24 @@ class UserFactory extends Factory
     {
         return [
             'name' => fake()->name(),
+            'username' => fake()->userName(),
+            'password' => fake()->password(), //static::$password ??= Hash::make('password'),
+            'status' => fake()->randomElement(UserStatus::cases()),
+            'roles' => fake()->randomElements(UserRole::cases()),
             'email' => fake()->unique()->safeEmail(),
             'email_verified_at' => now(),
-            'password' => static::$password ??= Hash::make('password'),
-            'remember_token' => Str::random(10),
+            'phone_number' => fake()->phoneNumber(),
+            'phone_number_verified_at' => now(),
+            'gender' => fake()->randomElement(UserGender::cases()),
+            'zodiac' => fake()->randomElement(UserZodiac::cases()),
+            'shio' => fake()->randomElement(UserShio::cases()),
+            'element' => fake()->randomElement(UserElement::cases()),
+            'birth_at' => fake()->dateTime(),
+            'address' => [
+                'city' => fake()->city(),
+                'province' => fake()->citySuffix(),
+                'country' => fake()->country()
+            ]
         ];
     }
 
@@ -36,6 +54,7 @@ class UserFactory extends Factory
     {
         return $this->state(fn (array $attributes) => [
             'email_verified_at' => null,
+            'phone_number_verified_at' => null,
         ]);
     }
 }
