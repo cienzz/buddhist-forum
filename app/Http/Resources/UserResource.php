@@ -30,6 +30,10 @@ class UserResource extends JsonResource
             'element' => $this->element,
             'birth_at' => $this->birth_at,
             'address' => $this->address,
+            'temples' => $this->temples,
+            'count_temples' => $this->count_temples,
+            'events' => $this->events,
+            'count_events' => $this->count_events,
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
         ];

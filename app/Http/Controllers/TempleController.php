@@ -8,6 +8,7 @@ use App\Http\Requests\StoreTempleRequest;
 use App\Http\Requests\UpdateTempleRequest;
 use App\Http\Resources\TempleResource;
 use App\Models\Temple;
+use App\ValueObjects\Member;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -63,11 +64,10 @@ class TempleController extends Controller
         ], true);
 
         //  push to temple's member
+        $user->roles = [];
+        $user->joined_at = new UTCDateTime();
+        $temple->push('members', (new Member($user->toArray()))->toArray());
         $temple->increment('count_members');
-        $temple->push('members', [
-            'username' => $user->username,
-            'joined_at' => new UTCDateTIme()
-        ]);
 
         return ['data' => ['success' => true]];
     }
@@ -100,8 +100,8 @@ class TempleController extends Controller
             return $this->error(trans('errors.temples.members.not_exists'));
         }
 
-        $temple->where('members.username', 'mokilo')->update(['members.$.roles' => $request->roles]);
-
-        return ['data' => $temple->refresh()];
+        return ['data' => [
+            'success' => (boolean) $temple->where('members.username', 'mokilo')->update(['members.$.roles' => $request->roles])
+        ]];
     }
 }

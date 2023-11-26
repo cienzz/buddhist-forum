@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Facades\Auth;
 
-class TempleResource extends JsonResource
+class EventResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -17,9 +17,8 @@ class TempleResource extends JsonResource
     public function toArray(Request $request): array
     {
         $data = parent::toArray($request);
-        $data['is_open'] = $this->resource->isOpen();
-        if (! Auth::check() || Auth::user()->currentAccessToken()->cant(RoleAbility::TEMPLE_VIEW)) {
-            unset($data['members']);
+        if (! Auth::check() || Auth::user()->currentAccessToken()->cant(RoleAbility::EVENT_VIEW)) {
+            unset($data['participants']);
         }
         return $data;
     }

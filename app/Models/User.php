@@ -4,12 +4,17 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 
+use App\Casts\EnumArray;
+use App\Casts\ObjectCollection;
 use App\Enums\UserElement;
 use App\Enums\UserGender;
 use App\Enums\UserRole;
 use App\Enums\UserShio;
 use App\Enums\UserStatus;
 use App\HasApiTokens;
+use App\ValueObjects\Address;
+use App\ValueObjects\Event;
+use App\ValueObjects\Temple;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use MongoDB\Laravel\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -26,7 +31,9 @@ class User extends Authenticatable
      */
     protected $attributes = [
         'status' => UserStatus::ACTIVE,
-        'roles' => [UserRole::USER]
+        'roles' => [UserRole::USER],
+        'count_temples' => 0,
+        'count_events' => 0,
     ];
 
     /**
@@ -40,10 +47,16 @@ class User extends Authenticatable
         'phone_number_verified_at' => 'datetime',
         'login_at' => 'datetime',
         'password' => 'hashed',
+        'roles' => EnumArray::class.':'.UserRole::class,
         'status' => UserStatus::class,
         'gender' => UserGender::class,
         'shio' => UserShio::class,
         'element' => UserElement::class,
+        'address' => Address::class,
+        'temples' => ObjectCollection::class.':'.Temple::class,
+        'count_temples' => 'integer',
+        'events' => ObjectCollection::class.':'.Event::class,
+        'count_events' => 'integer',
     ];
     
     /**
@@ -111,15 +124,15 @@ class User extends Authenticatable
                 ->value('abilities'));
 
         //  get abilities from user temple's roles
-        foreach (collect($this->temples) as $temple) {
-            $roles = Role::where('temple_id', $temple['_id'])
-                         ->where('role', $temple['role'] ?? 'member')
+        foreach ($this->temples->whereNotNull('roles') as $temple) {
+            $roles = Role::where('temple_id', $temple->_id)
+                         ->whereIn('role', $temple->roles)
                          ->value('abilities');
 
             if ($roles) {
                 $abilities->merge(
                     collect($roles)->map(function($ability) use ($temple) {
-                        return $ability.':'.$temple['_id'];
+                        return $ability.':'.$temple->_id;
                     }));
             }
         }
@@ -174,6 +187,8 @@ class User extends Authenticatable
     // password
     // status
     // roles
+    // profile_image_url
+    // profile_image_path
     // email
     // email_verified_at
     // phone_number
@@ -183,27 +198,11 @@ class User extends Authenticatable
     // shio
     // element
     // birth_at
-    // address [
-    //     city
-    //     province
-    //     country
-    // ]
+    // address
     // login_at
     // ips
     // count_temples
-    // temples [
-    //     {
-    //         _id
-    //         name
-    //     }
-    // ]
+    // temples
     // count_events
-    // events [
-    //     {
-    //         _id
-    //         name
-    //         start_at
-    //         end_at
-    //     }
-    // ]
+    // events
 }

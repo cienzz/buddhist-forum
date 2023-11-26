@@ -2,11 +2,11 @@
 
 namespace App\Casts;
 
-use Carbon\Carbon;
+use App\ValueObjects\Temple as TempleValueObject;
 use Illuminate\Contracts\Database\Eloquent\CastsAttributes;
 use Illuminate\Database\Eloquent\Model;
 
-class TempleMember implements CastsAttributes
+class Temple implements CastsAttributes
 {
     /**
      * Cast the given value.
@@ -15,10 +15,7 @@ class TempleMember implements CastsAttributes
      */
     public function get(Model $model, string $key, mixed $value, array $attributes): mixed
     {
-        return collect($value)->map(function($val) {
-            $val['joined_at'] = Carbon::parse($val['joined_at']->toDateTime());
-            return $val;
-        })->toArray();
+        return $value ? new TempleValueObject($value) : null;
     }
 
     /**
@@ -28,6 +25,10 @@ class TempleMember implements CastsAttributes
      */
     public function set(Model $model, string $key, mixed $value, array $attributes): mixed
     {
-        return $value;
+        if (! $value instanceof TempleValueObject) {
+            $value = new TempleValueObject($value);
+        }
+
+        return [$key => $value->toArray()];
     }
 }

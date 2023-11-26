@@ -16,7 +16,7 @@ class StoreTempleRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return $this->user()->currentAccessToken()->canAny(RoleAbility::TEMPLE_CREATE->value, RoleAbility::TEMPLE_CREATE->value.':'.$this->temple->_id);
+        return $this->user()->currentAccessToken()->canAny(RoleAbility::TEMPLE_CREATE->value);
     }
     
     /**

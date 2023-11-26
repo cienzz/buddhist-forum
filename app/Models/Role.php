@@ -2,7 +2,10 @@
 
 namespace App\Models;
 
+use App\Casts\EnumArray;
+use App\Enums\RoleAbility;
 use App\Enums\RoleStatus;
+use App\ValueObjects\Temple;
 
 class Role extends BaseModel
 {
@@ -22,7 +25,9 @@ class Role extends BaseModel
      * @var array<string, string>
      */
     protected $casts = [
+        'temple' => Temple::class,
         'status' => RoleStatus::class,
+        'abilities' => EnumArray::class.':'.RoleAbility::class,
     ];
 
     /**

@@ -9,6 +9,7 @@ return [
     */
 
     'temple' => [
+        'view'   => 'lihat tempat ibadah',
         'create' => 'tambah tempat ibadah',
         'update' => 'ubah tempat ibadah',
         'delete' => 'hapus tempat ibadah',

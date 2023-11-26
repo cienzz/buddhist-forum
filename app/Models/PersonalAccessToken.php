@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\RoleAbility;
 use Laravel\Sanctum\Contracts\HasAbilities;
 
 class PersonalAccessToken extends BaseModel implements HasAbilities
@@ -74,8 +75,7 @@ class PersonalAccessToken extends BaseModel implements HasAbilities
      */
     public function can($ability)
     {
-        return in_array('*', $this->abilities) ||
-               array_key_exists($ability, array_flip($this->abilities));
+        return in_array(RoleAbility::ALL->value, $this->abilities) || in_array($ability, $this->abilities);
     }
 
     /**

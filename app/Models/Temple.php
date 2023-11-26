@@ -2,8 +2,11 @@
 
 namespace App\Models;
 
-use App\Casts\TempleMember;
+use App\Casts\ObjectCollection;
 use App\Enums\TempleStatus;
+use App\ValueObjects\Address;
+use App\ValueObjects\Event;
+use App\ValueObjects\Member;
 use Carbon\Carbon;
 
 class Temple extends BaseModel
@@ -34,7 +37,11 @@ class Temple extends BaseModel
      */
     protected $casts = [
         'status' => TempleStatus::class,
-        'members' => TempleMember::class
+        'addresses' => ObjectCollection::class.':'.Address::class,
+        'members' => ObjectCollection::class.':'.Member::class,
+        'count_members' => 'integer',
+        'events' => ObjectCollection::class.':'.Event::class,
+        'count_events' => 'integer',
     ];
 
     /**
@@ -92,23 +99,17 @@ class Temple extends BaseModel
     // emails
     // website_url
     // tags
+    // profile_image_url
+    // profile_image_path
+    // cover_image_url
+    // cover_image_path
     // open_times [
     //     {
     //         day
     //         hours
     //     }
     // ]
-    // addresses [
-    //     {
-    //         url
-    //         coordinate
-    //         street
-    //         city
-    //         province
-    //         country
-    //         note
-    //     }
-    // ]
+    // addresses
     // social_medias
     // banks [
     //     {
@@ -119,36 +120,9 @@ class Temple extends BaseModel
     //     }
     // ]
     // count_members
-    // members [
-    //     {
-    //         name
-    //         phone_number
-    //         email
-    //         role
-    //         role_order
-    //     }
-    // ]
+    // members
     // count_events
-    // events [
-    //     {
-    //         _id
-    //         name
-    //         start_at
-    //         end_at
-    //         contacts [
-    //             {
-    //                 name
-    //                 phone_number
-    //                 email
-    //             }
-    //         ]
-    //     }
-    // ]
+    // events
     // count_galleries
-    // galleries [
-    //     {
-    //         type
-    //         url
-    //     }
-    // ]
+    // gallery_path
 }
