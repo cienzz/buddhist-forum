@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\RoleAbility;
 use Laravel\Sanctum\Contracts\HasAbilities;
 
 class PersonalAccessToken extends BaseModel implements HasAbilities
@@ -12,7 +13,6 @@ class PersonalAccessToken extends BaseModel implements HasAbilities
      * @var array
      */
     protected $casts = [
-        'abilities' => 'json',
         'last_used_at' => 'datetime',
         'expires_at' => 'datetime',
     ];
@@ -75,8 +75,7 @@ class PersonalAccessToken extends BaseModel implements HasAbilities
      */
     public function can($ability)
     {
-        return in_array('*', $this->abilities) ||
-               array_key_exists($ability, array_flip($this->abilities));
+        return in_array(RoleAbility::ALL->value, $this->abilities) || in_array($ability, $this->abilities);
     }
 
     /**
@@ -88,5 +87,22 @@ class PersonalAccessToken extends BaseModel implements HasAbilities
     public function cant($ability)
     {
         return ! $this->can($ability);
+    }
+
+    /**
+     * Determine if the token has a given ability.
+     *
+     * @param  string  $ability
+     * @return bool
+     */
+    public function canAny(...$abilities)
+    {
+        foreach ($abilities as $ability) {
+            if ($this->can($ability)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }

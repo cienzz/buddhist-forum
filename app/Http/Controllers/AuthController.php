@@ -34,7 +34,7 @@ class AuthController extends Controller
             $user->touch('login_at');
             $user->tokens()->where('name', $request->username)->forceDelete();
 
-            return ['data' => ['token' => $user->createToken($request->username)->plainTextToken]];
+            return ['data' => ['token' => $user->createToken($request->username, $user->abilities())->plainTextToken]];
         }
 
         throw new AuthorizationException(trans('auth.failed'));
